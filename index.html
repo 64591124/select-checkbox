@@ -50,7 +50,7 @@
     </div>
     <script>
         window.onload = function () {
-            // mousedownX、mousedownY分别代表鼠标点击下的左上角
+            // mousedownX、mousedownY分别代表鼠标点击的位置
             var mousedownX = 0;
             var mousedownY = 0;
             var mousemoveX = 0;
@@ -65,7 +65,6 @@
                 positionY = 0;
 
             document.onmousedown = function (ev) {
-                //获取具有兼容性的事件
                 var oEvent = ev || event;
 
                 //x、y分别代表，鼠标与div之间的横坐标和纵坐标
@@ -83,11 +82,11 @@
                 document.onmousemove = function (ev) {
                     var oEvent = ev || event;
 
-                    //m、n分别代表div的宽、高
+                    //width、height分别代表div的宽、高
                     width = Math.abs(oEvent.clientX - mousedownX);
                     height = Math.abs(oEvent.clientY - mousedownY);
 
-                    // 鼠标的四种情况
+                    // 鼠标的四种情况 鼠标按下为原点 div可在四个象限
                     if (mousedownX > oEvent.clientX && mousedownY > oEvent.clientY) {
                         positionX = oEvent.clientX;
                         positionY = oEvent.clientY;
@@ -136,11 +135,11 @@
                             input.checked = false;
                         }
                     }
-                    //释放move事件，如果不释放，放开鼠标后，div仍然会跟随鼠标移动
+                    //解绑 onmove事件
                     document.onmousemove = null;
                     document.onmouseup = null;
 
-                    //并且移除虚线框
+                    //移除虚线框
                     document.body.removeChild(box);
                 };
                 return false;
