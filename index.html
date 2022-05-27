@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title></title>
+    <style>
+        .box {
+            border: 1px dashed black;
+            position: absolute;
+        }
+
+        input {
+            width: 40px;
+            height: 40px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="father">
+        <input type="checkbox" />
+        <input type="checkbox" />
+        <input type="checkbox" />
+        <input type="checkbox" />
+        <input type="checkbox" />
+        <input type="checkbox" />
+        <br>
+        <input type="checkbox" />
+        <input type="checkbox" />
+        <input type="checkbox" />
+        <input type="checkbox" />
+        <input type="checkbox" />
+        <input type="checkbox" />
+        <br>
+        <input type="checkbox" />
+        <input type="checkbox" />
+        <input type="checkbox" />
+        <input type="checkbox" />
+        <input type="checkbox" />
+        <input type="checkbox" />
+        <br>
+        <input type="checkbox" />
+        <input type="checkbox" />
+        <input type="checkbox" />
+        <input type="checkbox" />
+        <input type="checkbox" />
+        <input type="checkbox" />
+    </div>
+    <script>
+        window.onload = function () {
+            // mousedownX、mousedownY分别代表鼠标点击下的左上角
+            var mousedownX = 0;
+            var mousedownY = 0;
+            var mousemoveX = 0;
+            var mousemoveY = 0;
+            // width、heigth代表鼠标移动位置
+            var width = 0;
+            var height = 0;
+
+            var box;
+
+            var positionX = 0,
+                positionY = 0;
+
+            document.onmousedown = function (ev) {
+                //获取具有兼容性的事件
+                var oEvent = ev || event;
+
+                //x、y分别代表，鼠标与div之间的横坐标和纵坐标
+
+                mousedownX = oEvent.clientX;
+                mousedownY = oEvent.clientY;
+
+                //创建一个div元素
+                box = document.createElement('div');
+
+                //将box插入到页面
+                document.body.appendChild(box);
+
+                //mouseMove函数
+                document.onmousemove = function (ev) {
+                    var oEvent = ev || event;
+
+                    //m、n分别代表div的宽、高
+                    width = Math.abs(oEvent.clientX - mousedownX);
+                    height = Math.abs(oEvent.clientY - mousedownY);
+
+                    // 鼠标的四种情况
+                    if (mousedownX > oEvent.clientX && mousedownY > oEvent.clientY) {
+                        positionX = oEvent.clientX;
+                        positionY = oEvent.clientY;
+                        mousemoveX = mousedownX;
+                        mousemoveY = mousedownY;
+                    } else if (mousedownX < oEvent.clientX && mousedownY < oEvent.clientY) {
+                        positionX = mousedownX;
+                        positionY = mousedownY;
+                        mousemoveX = oEvent.clientX;
+                        mousemoveY = oEvent.clientY;
+                    } else if (mousedownX > oEvent.clientX && mousedownY < oEvent.clientY) {
+                        positionX = oEvent.clientX;
+                        positionY = mousedownY;
+                        mousemoveX = mousedownX;
+                        mousemoveY = oEvent.clientY;
+                    } else {
+                        positionX = mousedownX;
+                        positionY = oEvent.clientY;
+                        mousemoveX = oEvent.clientX;
+                        mousemoveY = mousedownY;
+                    }
+                    //将创建好的样式赋给box
+                    box.className = 'box';
+                    box.style.left = positionX + 'px';
+                    box.style.top = positionY + 'px';
+                    //设置div的坐标
+                    box.style.width = width + 'px';
+                    box.style.height = height + 'px';
+                };
+
+                //mouseUp函数
+                document.onmouseup = function (ev) {
+                    var oEvent = ev || event;
+                    var inputArr = document.getElementsByTagName('input');
+
+                    for (const input of inputArr) {
+                        console.log(input.offsetLeft, input.offsetTop, positionX, positionY);
+                        if (
+                            input.offsetLeft + input.offsetWidth > positionX &&
+                            input.offsetTop + input.offsetHeight > positionY &&
+                            input.offsetLeft < mousemoveX &&
+                            input.offsetTop < mousemoveY
+                        ) {
+                            input.checked = true;
+                        } else {
+                            input.checked = false;
+                        }
+                    }
+                    //释放move事件，如果不释放，放开鼠标后，div仍然会跟随鼠标移动
+                    document.onmousemove = null;
+                    document.onmouseup = null;
+
+                    //并且移除虚线框
+                    document.body.removeChild(box);
+                };
+                return false;
+            };
+        };
+    </script>
+</body>
+
+</html>
